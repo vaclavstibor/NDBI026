@@ -1,56 +1,8 @@
-# NDBI026
-Database applications development (2022/23)
+-- Filmova databaze
 
-# Schéma filmové databáze
-
-## 1. Movies
-    - MovieID (primary key)
-    - Title
-    - ReleaseYear
-    - Director
-    - MainActors
-    - Genre
-    - Duration
-## 2. Directors
-    - DirectorID (primary key)
-    - FirstName
-    - LastName
-    - DateOfBirth
-    - CountryOfOrigin
-## 3. Actors
-    - ActorID (primary key)
-    - FirstName
-    - LastName
-    - DateOfBirth
-    - CountryOfOrigin
-## 4. Genres
-    - GenreID (primary key)
-    - Name
-## 5. Table Ratings
-    - RatingID (primary key)
-    - MovieID (foreign key referencing the "Movies" table)
-    - Rating (numeric value)
-## 6. Users
-    - UserID (primary key)
-    - FirstName
-    - LastName
-    - Email
-    - Password
-## 7. FavoriteMovies
-    - FavoriteID (primary key)
-    - UserID (foreign key referencing the "Users" table)
-    - MovieID (foreign key referencing the "Movies" table)
-## 8. Reviews
-    - ReviewID (primary key)
-    - UserID (foreign key referencing the "Users" table)
-    - MovieID (foreign key referencing the "Movies" table)
-    - ReviewText
-    - ReviewDate
-
----
-
-Filmová databáze
----
+/*
+Filmova databaze
+----------------
 
 - Každý film v databázi má název, rok vydání a je režírován konkrétním režisérem.   
     - Dále se u filmů evidují informace o hlavních hercích, žánru a délce. 
@@ -132,3 +84,83 @@ Poznámky
 - Trigger AddNewActors
   - Reaguje na vložení nových filmů do tabulky Movies a přidává nové herce do tabulky Actors na základě herců uvedených ve vkládaném filmu. 
   - Ověří, zda herci již existují v tabulce Actors a vloží nové herce, pokud neexistují.
+
+*/
+
+CREATE TABLE Users (
+  UserID int PRIMARY KEY,
+  FirstName nvarchar(30) NOT NULL,
+  LastName nvarchar(30) NOT NULL,
+  Email nvarchar(60) NOT NULL UNIQUE
+    check (Email like '%_@_%.__%'),
+  Password nvarchar(60)
+);
+
+CREATE TABLE Movies (
+  MovieID int PRIMARY KEY,
+  Title nvarchar(255) NOT NULL UNIQUE,
+  ReleaseYear int,
+  DirectorID int,
+  AverageRating DECIMAL(4,2),
+  MainActors nvarchar(255),
+  GenreID int,
+  Duration int
+    check (Duration > 0)
+);
+
+CREATE TABLE Directors (
+  DirectorID int PRIMARY KEY,
+  FirstName nvarchar(60) NOT NULL,
+  LastName nvarchar(60) NOT NULL,
+  DateOfBirth DATE,
+  CountryOfOrigin varchar(60),
+  constraint U_Director_FirstName_LastName UNIQUE (FirstName, LastName)
+);
+
+CREATE TABLE Actors (
+  ActorID int PRIMARY KEY,
+  FirstName nvarchar(60) NOT NULL,
+  LastName nvarchar(60) NOT NULL,
+  DateOfBirth DATE,
+  CountryOfOrigin varchar(60),
+  constraint U_Actor_FirstName_LastName UNIQUE (FirstName, LastName)
+);
+
+CREATE TABLE Genres (
+  GenreID int PRIMARY KEY,
+  Name varchar(30) NOT NULL
+);
+
+CREATE TABLE Ratings (
+  RatingID int PRIMARY KEY,
+  MovieID int NOT NULL,
+  UserID int NOT NULL,
+  Rating decimal(2,1) NOT NULL
+    check (Rating >= 0 AND Rating <= 5),  
+  FOREIGN KEY (MovieID) REFERENCES Movies (MovieID),
+  FOREIGN KEY (UserID) REFERENCES Users (UserID)
+);
+
+CREATE TABLE FavoriteMovies (
+  FavoriteID int PRIMARY KEY,
+  UserID int NOT NULL,
+  MovieID int NOT NULL,
+  FOREIGN KEY (UserID) REFERENCES Users (UserID),
+  FOREIGN KEY (MovieID) REFERENCES Movies (MovieID),
+  constraint U_UserID_MovieID_Favorite UNIQUE (UserID, MovieID)
+);
+
+CREATE TABLE Reviews (
+  ReviewID int PRIMARY KEY,
+  UserID int,
+  MovieID int,
+  ReviewText TEXT NOT NULL,
+  ReviewDate DATE,
+  constraint FK_UserID FOREIGN KEY (UserID) REFERENCES Users (UserID),
+  constraint FK_MovieID FOREIGN KEY (MovieID) REFERENCES Movies (MovieID),
+  constraint NN_Reviews_UserID check (UserID IS NOT NULL),
+  constraint NN_Reviews_MovieID check (MovieID IS NOT NULL),
+  constraint NN_Reviews_ReviewDate check (ReviewDate IS NOT NULL),
+  constraint U_UserID_MovieID_Review UNIQUE (UserID, MovieID)
+);
+
