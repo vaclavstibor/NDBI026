@@ -11,35 +11,42 @@ Database applications development (2022/23)
     - MainActors
     - Genre
     - Duration
+    
 ## 2. Directors
     - DirectorID (primary key)
     - FirstName
     - LastName
     - DateOfBirth
     - CountryOfOrigin
+    
 ## 3. Actors
     - ActorID (primary key)
     - FirstName
     - LastName
     - DateOfBirth
     - CountryOfOrigin
+    
 ## 4. Genres
     - GenreID (primary key)
     - Name
+    
 ## 5. Table Ratings
     - RatingID (primary key)
     - MovieID (foreign key referencing the "Movies" table)
     - Rating (numeric value)
-## 6. Users
+
+## 6. Users    
     - UserID (primary key)
     - FirstName
     - LastName
     - Email
     - Password
+    
 ## 7. FavoriteMovies
     - FavoriteID (primary key)
     - UserID (foreign key referencing the "Users" table)
     - MovieID (foreign key referencing the "Movies" table)
+    
 ## 8. Reviews
     - ReviewID (primary key)
     - UserID (foreign key referencing the "Users" table)
