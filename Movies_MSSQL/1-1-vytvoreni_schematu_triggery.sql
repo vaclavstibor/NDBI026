@@ -1,24 +1,25 @@
 -- Filmova databaze
 
--- Trigger pro aktualizovani prumerneho hodnoceni filmu
+-- Trigger pro aktualizovani prumerneho hodnoceni filmu 
 CREATE OR ALTER TRIGGER UpdateAverageRating
 ON Ratings
 AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
-    MERGE INTO Movies AS target
-    USING (
+    -- Aktualizace průměrného hodnocení pouze pro ovlivněné filmy
+    UPDATE Movies
+    SET AverageRating = COALESCE(source.AverageRating, 0)
+    FROM Movies
+    JOIN (
         SELECT MovieID, AVG(Rating) AS AverageRating
         FROM Ratings
+        WHERE MovieID IN (SELECT DISTINCT MovieID FROM inserted)
+            OR MovieID IN (SELECT DISTINCT MovieID FROM deleted)
         GROUP BY MovieID
-    ) AS source (MovieID, AverageRating)
-    ON target.MovieID = source.MovieID
-    WHEN MATCHED THEN
-        UPDATE SET target.AverageRating = COALESCE(source.AverageRating, 0)
-    WHEN NOT MATCHED BY SOURCE THEN
-        UPDATE SET target.AverageRating = 0
-    ;
+    ) AS source ON Movies.MovieID = source.MovieID;
 END;
+GO
+
 GO
 
 -- Trigger pro vkládání nových herců při vložení filmu
@@ -59,7 +60,7 @@ BEGIN
     )
     BEGIN
       -- Vygenerování nového ID pro herce
-      SET @actor_id = (SELECT ISNULL(MAX(ActorID), 0) + 1 FROM Actors);
+      SELECT @actor_id = SCOPE_IDENTITY();
 
       -- Vložení nového herce
       INSERT INTO Actors (ActorID, FirstName, LastName)
@@ -69,3 +70,21 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER TRIGGER UpdateAverageRating
+ON Ratings
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    -- Aktualizace průměrného hodnocení pouze pro ovlivněné filmy
+    UPDATE Movies
+    SET AverageRating = COALESCE(source.AverageRating, 0)
+    FROM Movies
+    JOIN (
+        SELECT MovieID, AVG(Rating) AS AverageRating
+        FROM Ratings
+        WHERE MovieID IN (SELECT DISTINCT MovieID FROM inserted)
+            OR MovieID IN (SELECT DISTINCT MovieID FROM deleted)
+        GROUP BY MovieID
+    ) AS source ON Movies.MovieID = source.MovieID;
+END;
+GO

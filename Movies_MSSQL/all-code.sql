@@ -1,4 +1,3 @@
-
 CREATE TABLE Users (
   UserID int PRIMARY KEY,
   FirstName nvarchar(30) NOT NULL,
@@ -49,7 +48,7 @@ CREATE TABLE Ratings (
   UserID int NOT NULL,
   Rating decimal(2,1) NOT NULL
     check (Rating >= 0 AND Rating <= 5),  
-  FOREIGN KEY (MovieID) REFERENCES Movies (MovieID),
+  FOREIGN KEY (MovieID) REFERENCES Movies (MovieID) ON DELETE CASCADE,
   FOREIGN KEY (UserID) REFERENCES Users (UserID)
 );
 
@@ -57,8 +56,8 @@ CREATE TABLE FavoriteMovies (
   FavoriteID int PRIMARY KEY,
   UserID int NOT NULL,
   MovieID int NOT NULL,
-  FOREIGN KEY (UserID) REFERENCES Users (UserID),
-  FOREIGN KEY (MovieID) REFERENCES Movies (MovieID),
+  FOREIGN KEY (UserID) REFERENCES Users (UserID) ON DELETE CASCADE,
+  FOREIGN KEY (MovieID) REFERENCES Movies (MovieID) ON DELETE CASCADE,
   constraint U_UserID_MovieID_Favorite UNIQUE (UserID, MovieID)
 );
 
@@ -68,8 +67,8 @@ CREATE TABLE Reviews (
   MovieID int,
   ReviewText TEXT NOT NULL,
   ReviewDate DATE,
-  constraint FK_UserID FOREIGN KEY (UserID) REFERENCES Users (UserID),
-  constraint FK_MovieID FOREIGN KEY (MovieID) REFERENCES Movies (MovieID),
+  constraint FK_UserID FOREIGN KEY (UserID) REFERENCES Users (UserID) ON DELETE CASCADE,
+  constraint FK_MovieID FOREIGN KEY (MovieID) REFERENCES Movies (MovieID) ON DELETE CASCADE,
   constraint NN_Reviews_UserID check (UserID IS NOT NULL),
   constraint NN_Reviews_MovieID check (MovieID IS NOT NULL),
   constraint NN_Reviews_ReviewDate check (ReviewDate IS NOT NULL),

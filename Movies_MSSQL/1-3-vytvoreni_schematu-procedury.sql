@@ -1,32 +1,44 @@
 -- Filmova databaze
 
--- Procedura pro vytvoreni hodnoceni filmu
+-- Procedura pro vytvoření hodnocení filmu
 CREATE PROCEDURE AddMovieRating
     @MovieID INT,
     @UserID INT,
     @Rating DECIMAL(2,1)
 AS
 BEGIN
-    -- Uživatel může mít pouze jedno hodnocení k filmu
-    IF NOT EXISTS (
-        SELECT 1
-        FROM Ratings
-        WHERE MovieID = @MovieID AND UserID = @UserID
-    )
-    BEGIN
-        DECLARE @RatingID INT;
+    BEGIN TRY
+        BEGIN TRANSACTION;
 
-        -- Vytvoření nového RatingID 
-        SELECT @RatingID = ISNULL(MAX(RatingID), 0) + 1
-        FROM Ratings;
+        -- Uživatel může mít pouze jedno hodnocení k filmu
+        IF NOT EXISTS (
+            SELECT 1
+            FROM Ratings
+            WHERE MovieID = @MovieID AND UserID = @UserID
+        )
+        BEGIN
+            DECLARE @RatingID INT;
 
-        INSERT INTO Ratings (RatingID, MovieID, UserID, Rating)
-        VALUES (@RatingID, @MovieID, @UserID, @Rating);
-    END;
-    ELSE
-    BEGIN
-        RAISERROR('User already has a rating for this movie.', 16, 1);
-    END;
+            -- Vytvoření nového RatingID 
+            SELECT @RatingID = ISNULL(MAX(RatingID), 0) + 1
+            FROM Ratings;
+
+            INSERT INTO Ratings (RatingID, MovieID, UserID, Rating)
+            VALUES (@RatingID, @MovieID, @UserID, @Rating);
+        END;
+        ELSE
+        BEGIN
+            THROW 50000, 'User already has a rating for this movie.', 1;
+        END;
+
+        COMMIT;
+    END TRY
+    BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR('Error while inserting operation: %s', 16, 1, @ErrorMessage);
+
+        ROLLBACK; -- Pokud došlo k chybě, vrátit transakci
+    END CATCH;
 END;
 -- Volani procedury:
     -- EXEC AddMovieRating @MovieID = 3, @UserID = 1, @Rating = 4.5;
@@ -40,26 +52,38 @@ CREATE PROCEDURE AddMovieReview
     @ReviewDate DATE
 AS
 BEGIN
-    -- Uživatel může mít pouze jednu recenzi k filmu
-    IF NOT EXISTS (
-        SELECT 1
-        FROM Reviews 
-        WHERE MovieID = @MovieID AND UserID = @UserID
-    )
-    BEGIN
-        DECLARE @ReviewID INT;
+    BEGIN TRY
+        BEGIN TRANSACTION;
 
-        -- Vytvoření nového ReviewID
-        SELECT @ReviewID = ISNULL(MAX(ReviewID), 0) + 1
-        FROM Reviews;
+        -- Uživatel může mít pouze jednu recenzi k filmu
+        IF NOT EXISTS (
+            SELECT 1
+            FROM Reviews 
+            WHERE MovieID = @MovieID AND UserID = @UserID
+        )
+        BEGIN
+            DECLARE @ReviewID INT;
 
-        INSERT INTO Reviews (ReviewID, MovieID, UserID, ReviewText, ReviewDate)
-        VALUES (@ReviewID, @MovieID, @UserID, @ReviewText, @ReviewDate);
-    END;
-    ELSE
-    BEGIN
-        RAISERROR('User already has a review for this movie.', 16, 1);
-    END;
+            -- Vytvoření nového ReviewID
+            SELECT @ReviewID = ISNULL(MAX(ReviewID), 0) + 1
+            FROM Reviews;
+
+            INSERT INTO Reviews (ReviewID, MovieID, UserID, ReviewText, ReviewDate)
+            VALUES (@ReviewID, @MovieID, @UserID, @ReviewText, @ReviewDate);
+        END;
+        ELSE
+        BEGIN
+            THROW 50000, 'User already has a review for this movie.', 1;
+        END;
+
+        COMMIT;
+    END TRY
+    BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR('Error while inserting operation: %s', 16, 1, @ErrorMessage);
+
+        ROLLBACK; -- Pokud došlo k chybě, vrátit transakci
+    END CATCH;
 END;
 -- Volání procedury:
     -- EXEC AddMovieReview @MovieID = 1, @UserID = 1, @ReviewText = 'The best movie I have ever seen.', @ReviewDate = '2023-06-21';

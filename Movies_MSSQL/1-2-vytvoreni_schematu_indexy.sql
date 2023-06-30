@@ -13,10 +13,12 @@ CREATE INDEX Reviews_UserID_Index ON Reviews(UserID);
 CREATE INDEX Reviews_MovieID_Index ON Reviews(MovieID);
 
 -- Umožňuje rychlé vyhledávání hodnocení filmů na základě jejich ID a ID uživatele pro optimalizaci procedury AddMovieRating.
-CREATE INDEX Ratings_MovieID_UserID_Index ON Ratings(MovieID, UserID);
+-- Zabrání vložení duplicitních řádků do tabulky Ratings, tj. žádný uživatel nebude moc ohodnotit film více než jednou.
+CREATE UNIQUE INDEX Ratings_MovieID_UserID_Index ON Ratings(MovieID, UserID);
 
 -- Optimalizace GetMovieReviews. Urychluje vyhledávání recenzí na základě ID filmu a ID uživatele.
-CREATE INDEX Reviews_MovieID_UserID_Index ON Reviews(MovieID, UserID);
+-- Zabrání vložení duplicitních řádků do tabulky Reviews, tj. žádný uživatel nebude moc recenzovat film více než jednou.
+CREATE UNIQUE INDEX Reviews_MovieID_UserID_Index ON Reviews(MovieID, UserID);
 
 -- Usnadňuje vyhledávání filmů na základě roku vydání, což je užitečné pro proceduru SearchMoviesByReleaseYear.
 CREATE INDEX Movies_ReleaseYear_Index ON Movies(ReleaseYear);

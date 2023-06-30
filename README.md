@@ -1,6 +1,20 @@
 # NDBI026
 Database applications development (2022/23)
 
+# Připomínky
+
+Ze čtení kódu mám nějaké připomínky:
+- [x] Nestálo by za to, aby některé cizí klíče měly nějakou non-default ON DELETE klauzuli?
+- [x] Opravdu chcete dovolit, aby jeden uživatel hodnotil jeden film vícekrát? Možná to samé u Reviews.
+- Directors a Actors jsou natolik podobné/stejné, že by možná stálo za to je chápat jako součást nějaké hierarchie.
+- [x] Nebude ten TRIGGER UpdateAverageRating zbytečně pomalý, když bude po každém novém ratingu všechno přepočítávat?
+- [x] Bude řešení, použité v TRIGGER AddNewActors bezpečné, pokud se bude vkládat paralelně více filmů? Varianta se SELECT MAX+1 mi přijde podezřelá.
+- U procedur pro zobrazení je otázka, jestli by nebyla funkce, vracející tabulku, lepším řešením. Dalo by se nad tím dělat další SELECTy
+  Proti mluví ale zase to, že se funkce v MSSQL ne zcela šťastně volají s nutností kvalifikovat je vlastníkem.
+    - *Pokud bychom chtěli na ni dělat další SELECTy*
+- Je k něčemu pohled MovieRatings_VW, když vrací jen data z jedné tabulky?
+    - *Ano, dá se na něj jednoduššeji odkázat. Přehlednější zápis požadované akce, která svým pojmenování jednoznačná a přehledná, pokud uvažujeme, že ji chceme někdy v budoucnu používat (např. jako nějaké API).*
+
 # Schéma filmové databáze
 
 ## 1. Movies
