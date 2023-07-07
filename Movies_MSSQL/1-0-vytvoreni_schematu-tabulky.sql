@@ -8,11 +8,8 @@ Filmova databaze
     - Dále se u filmů evidují informace o hlavních hercích, žánru a délce. 
     - Filmy jsou identifikovány pomocí unikátního MovieID.      
 
-- Režiséři jsou identifikováni pomocí unikátního DirectorID. 
-    - Kromě jména a příjmení režisérů se také eviduje jejich datum narození a země původu.
-
-- Herci jsou identifikováni pomocí unikátního ActorID. 
-    - Každý herec má jméno, příjmení, datum narození a zemi svého původu.
+- Režiséři a herci (případně další členové týmu podílejícím se na tvorbě dilmu) jsou obsaženi tabulce CastAndCrew.
+    - Každá osoba má své jméno, příjmení, datum narození, zemi svého původu a identifikaci své role v týmu.
 
 - Filmy jsou zařazeny do různých žánrů.
 
@@ -82,8 +79,8 @@ Poznámky
   - Aktualizuje průměrná hodnocení filmů v tabulce Movies na základě nových hodnocení vložených, upravených nebo smazaných záznamů v tabulce Ratings.
 
 - Trigger AddNewActors
-  - Reaguje na vložení nových filmů do tabulky Movies a přidává nové herce do tabulky Actors na základě herců uvedených ve vkládaném filmu. 
-  - Ověří, zda herci již existují v tabulce Actors a vloží nové herce, pokud neexistují.
+  - Reaguje na vložení nových filmů do tabulky Movies a přidává nové herce do tabulky CastAndCrew na základě herců uvedených ve vkládaném filmu. 
+  - Ověří, zda herci již existují v tabulce CastAndCrew a vloží nové herce, pokud neexistují.
 
 */
 
@@ -105,25 +102,19 @@ CREATE TABLE Movies (
   MainActors nvarchar(255),
   GenreID int,
   Duration int
-    check (Duration > 0)
+    check (Duration > 0),
+  FOREIGN KEY (DirectorID) REFERENCES CastAndCrew (PersonID)
+  FOREIGN KEY (GenreID) REFERENCES Genres (GenreID)
 );
 
-CREATE TABLE Directors (
-  DirectorID int PRIMARY KEY,
+CREATE TABLE CastAndCrew (
+  PersonID INT IDENTITY(1,1) PRIMARY KEY,
   FirstName nvarchar(60) NOT NULL,
   LastName nvarchar(60) NOT NULL,
   DateOfBirth DATE,
   CountryOfOrigin varchar(60),
-  constraint U_Director_FirstName_LastName UNIQUE (FirstName, LastName)
-);
-
-CREATE TABLE Actors (
-  ActorID INT IDENTITY(1,1) PRIMARY KEY,
-  FirstName nvarchar(60) NOT NULL,
-  LastName nvarchar(60) NOT NULL,
-  DateOfBirth DATE,
-  CountryOfOrigin varchar(60),
-  constraint U_Actor_FirstName_LastName UNIQUE (FirstName, LastName)
+  PersonType varchar(10) NOT NULL, -- 'Actor' or 'Director'
+  constraint U_PersonType_FirstName_LastName UNIQUE (PersonType, FirstName, LastName)
 );
 
 CREATE TABLE Genres (
@@ -138,7 +129,7 @@ CREATE TABLE Ratings (
   Rating decimal(2,1) NOT NULL
     check (Rating >= 0 AND Rating <= 5),  
   FOREIGN KEY (MovieID) REFERENCES Movies (MovieID) ON DELETE CASCADE,
-  FOREIGN KEY (UserID) REFERENCES Users (UserID)
+  FOREIGN KEY (UserID) REFERENCES Users (UserID) ON DELETE CASCADE
 );
 
 CREATE TABLE FavoriteMovies (

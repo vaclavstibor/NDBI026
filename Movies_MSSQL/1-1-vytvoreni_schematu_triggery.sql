@@ -20,8 +20,6 @@ BEGIN
 END;
 GO
 
-GO
-
 -- Trigger pro vkládání nových herců při vložení filmu
 CREATE OR ALTER TRIGGER AddNewActors
 ON Movies
@@ -56,35 +54,16 @@ BEGIN
     
     -- Kontrola, zda herec již existuje v tabulce Actors
     IF NOT EXISTS (
-      SELECT 1 FROM Actors WHERE FirstName = @first_name AND LastName = @last_name
+      SELECT 1 FROM CastAndCrew WHERE PersonType = 'Actor' AND FirstName = @first_name AND LastName = @last_name
     )
     BEGIN
       -- Vygenerování nového ID pro herce
       SELECT @actor_id = SCOPE_IDENTITY();
 
       -- Vložení nového herce
-      INSERT INTO Actors (ActorID, FirstName, LastName)
-      VALUES (@actor_id, @first_name, @last_name);
+      INSERT INTO CastAndCrew (PersonID, FirstName, LastName, PersonType)
+      VALUES (@actor_id, @first_name, @last_name,'Actor');
     END;
   END;
-END;
-GO
-
-CREATE OR ALTER TRIGGER UpdateAverageRating
-ON Ratings
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    -- Aktualizace průměrného hodnocení pouze pro ovlivněné filmy
-    UPDATE Movies
-    SET AverageRating = COALESCE(source.AverageRating, 0)
-    FROM Movies
-    JOIN (
-        SELECT MovieID, AVG(Rating) AS AverageRating
-        FROM Ratings
-        WHERE MovieID IN (SELECT DISTINCT MovieID FROM inserted)
-            OR MovieID IN (SELECT DISTINCT MovieID FROM deleted)
-        GROUP BY MovieID
-    ) AS source ON Movies.MovieID = source.MovieID;
 END;
 GO

@@ -3,17 +3,21 @@ Database applications development (2022/23)
 
 # Připomínky
 
-Ze čtení kódu mám nějaké připomínky:
 - [x] Nestálo by za to, aby některé cizí klíče měly nějakou non-default ON DELETE klauzuli?
-- [x] Opravdu chcete dovolit, aby jeden uživatel hodnotil jeden film vícekrát? Možná to samé u Reviews.
-- Directors a Actors jsou natolik podobné/stejné, že by možná stálo za to je chápat jako součást nějaké hierarchie.
-- [x] Nebude ten TRIGGER UpdateAverageRating zbytečně pomalý, když bude po každém novém ratingu všechno přepočítávat?
-- [x] Bude řešení, použité v TRIGGER AddNewActors bezpečné, pokud se bude vkládat paralelně více filmů? Varianta se SELECT MAX+1 mi přijde podezřelá.
-- U procedur pro zobrazení je otázka, jestli by nebyla funkce, vracející tabulku, lepším řešením. Dalo by se nad tím dělat další SELECTy
-  Proti mluví ale zase to, že se funkce v MSSQL ne zcela šťastně volají s nutností kvalifikovat je vlastníkem.
-    - *Pokud bychom chtěli na ni dělat další SELECTy*
-- Je k něčemu pohled MovieRatings_VW, když vrací jen data z jedné tabulky?
-    - *Ano, dá se na něj jednoduššeji odkázat. Přehlednější zápis požadované akce, která svým pojmenování jednoznačná a přehledná, pokud uvažujeme, že ji chceme někdy v budoucnu používat (např. jako nějaké API).*
+    - **> OPRAVENO. Máte pravdu, stálo.**
+- [x] *Opravdu chcete dovolit, aby jeden uživatel hodnotil jeden film vícekrát? Možná to samé u Reviews.*
+  - *Aha, podle procedur AddMovieRating/AddMovieReview vidím, že ne. Bezpečnější by bylo mít index nad dvojicí cizích klíčů unikátní (ještě lépe UNIQUE omezení)*
+    - **> OPRAVENO.**
+- [x] *Directors a Actors jsou natolik podobné/stejné, že by možná stálo za to je chápat jako součást nějaké hierarchie.*
+    - **> OPRAVENO. Directos a Actors sločeni do jedné tabulky CastAndCrew.**
+- [x] *Nebude ten TRIGGER UpdateAverageRating zbytečně pomalý, když bude po každém novém ratingu všechno přepočítávat?*
+    - **> OPRAVENO. Aktualizace průměrného hodnocení pouze pro filmy, kterých se přidané hodnocení týká.**
+- [x] *Bude řešení, použité v TRIGGER AddNewActors bezpečné, pokud se bude vkládat paralelně více filmů? Varianta se SELECT MAX+1 mi přijde podezřelá.*
+    - **> OPRAVENO. Použití SCOPE_IDENTITY()**
+- [ ] *U procedur pro zobrazení je otázka, jestli by nebyla funkce, vracející tabulku, lepším řešením. Dalo by se nad tím dělat další SELECTy. Proti mluví ale zase to, že se funkce v MSSQL ne zcela šťastně volají s nutností kvalifikovat je vlastníkem.*
+    - **> Pokud bychom chtěli na ni dělat další SELECTy**
+- [ ] *Je k něčemu pohled MovieRatings_VW, když vrací jen data z jedné tabulky?*
+    - **> Ano, dá se na něj jednoduššeji odkázat. Přehlednější zápis požadované akce, která svým pojmenování jednoznačná a přehledná, pokud uvažujeme, že ji chceme někdy v budoucnu používat (např. jako nějaké API).**
 
 # Schéma filmové databáze
 
@@ -26,42 +30,36 @@ Ze čtení kódu mám nějaké připomínky:
     - Genre
     - Duration
     
-## 2. Directors
-    - DirectorID (primary key)
+## 2. CastAndCrew
+    - PersonID (primary key)
     - FirstName
     - LastName
     - DateOfBirth
     - CountryOfOrigin
-    
-## 3. Actors
-    - ActorID (primary key)
-    - FirstName
-    - LastName
-    - DateOfBirth
-    - CountryOfOrigin
-    
-## 4. Genres
+    - PersonType
+
+## 3. Genres
     - GenreID (primary key)
     - Name
     
-## 5. Table Ratings
+## 4. Table Ratings
     - RatingID (primary key)
     - MovieID (foreign key referencing the "Movies" table)
     - Rating (numeric value)
 
-## 6. Users    
+## 5. Users    
     - UserID (primary key)
     - FirstName
     - LastName
     - Email
     - Password
     
-## 7. FavoriteMovies
+## 6. FavoriteMovies
     - FavoriteID (primary key)
     - UserID (foreign key referencing the "Users" table)
     - MovieID (foreign key referencing the "Movies" table)
     
-## 8. Reviews
+## 7. Reviews
     - ReviewID (primary key)
     - UserID (foreign key referencing the "Users" table)
     - MovieID (foreign key referencing the "Movies" table)
@@ -77,11 +75,8 @@ Filmová databáze
     - Dále se u filmů evidují informace o hlavních hercích, žánru a délce. 
     - Filmy jsou identifikovány pomocí unikátního MovieID.      
 
-- Režiséři jsou identifikováni pomocí unikátního DirectorID. 
-    - Kromě jména a příjmení režisérů se také eviduje jejich datum narození a země původu.
-
-- Herci jsou identifikováni pomocí unikátního ActorID. 
-    - Každý herec má jméno, příjmení, datum narození a zemi svého původu.
+- Režiséři a herci (případně další členové týmu podílejícím se na tvorbě dilmu) jsou obsaženi tabulce CastAndCrew.
+    - Každá osoba má své jméno, příjmení, datum narození, zemi svého původu a identifikaci své role v týmu.
 
 - Filmy jsou zařazeny do různých žánrů.
 

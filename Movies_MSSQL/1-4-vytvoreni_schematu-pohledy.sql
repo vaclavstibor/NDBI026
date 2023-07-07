@@ -2,9 +2,9 @@
 
 -- Vypis o filmech a jejich reziserech
 CREATE VIEW MovieDirectors_VW AS
-SELECT m.MovieID, m.Title, m.ReleaseYear, d.FirstName, d.LastName
+SELECT m.MovieID, m.Title, m.ReleaseYear, c.FirstName, c.LastName
 FROM Movies m
-JOIN Directors d ON m.DirectorID = d.DirectorID;
+JOIN CastAndCrew c ON m.DirectorID = c.PersonID;
 GO;
 
 -- Vypis filmu s jejich prumernym hodnocenim

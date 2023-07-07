@@ -2,7 +2,6 @@
 
 -- Indexy pro cizí klíče
 ------------------------
-CREATE INDEX Directors_DirectorID_Index ON Directors(DirectorID);
 CREATE INDEX Movies_DirectorID_Index ON Movies(DirectorID);
 CREATE INDEX Movies_GenreID_Index ON Movies(GenreID);
 CREATE INDEX Ratings_MovieID_Index ON Ratings(MovieID);

@@ -35,7 +35,7 @@ BEGIN
     END TRY
     BEGIN CATCH
         DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-        RAISERROR('Error while inserting operation: %s', 16, 1, @ErrorMessage);
+        RAISERROR('Error while inserting operation: %s in AddMovieRating procedure.', 16, 1, @ErrorMessage);
 
         ROLLBACK; -- Pokud došlo k chybě, vrátit transakci
     END CATCH;
@@ -80,7 +80,7 @@ BEGIN
     END TRY
     BEGIN CATCH
         DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-        RAISERROR('Error while inserting operation: %s', 16, 1, @ErrorMessage);
+        RAISERROR('Error while inserting operation: %s in AddMovieReview procedure.', 16, 1, @ErrorMessage);
 
         ROLLBACK; -- Pokud došlo k chybě, vrátit transakci
     END CATCH;

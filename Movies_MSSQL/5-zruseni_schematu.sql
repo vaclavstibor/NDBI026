@@ -24,7 +24,6 @@ DROP TABLE Reviews;
 DROP TABLE FavoriteMovies;
 DROP TABLE Ratings;
 DROP TABLE Genres;
-DROP TABLE Actors;
-DROP TABLE Directors;
+DROP TABLE CastAndCrew;
 DROP TABLE Movies;
 DROP TABLE Users;

@@ -11,23 +11,23 @@ INSERT INTO Movies
     (4, 'The Dark Knight', 2008, 1, 9.0, 'Christian Bale, Heath Ledger', 2, 152),
     (5, 'Fight Club', 1999, 4, 8.8, 'Brad Pitt, Edward Norton', 4, 139);
 
--- Vlozeni dat do tabulky Directors
-INSERT INTO Directors 
-  (DirectorID, FirstName, LastName, DateOfBirth, CountryOfOrigin)
+-- Vlozeni Directors do tabulky CastAndCrew
+INSERT INTO CastAndCrew 
+  (PersonID, FirstName, LastName, DateOfBirth, CountryOfOrigin, PersonType)
   VALUES
-    (1, 'John', 'Smith', '1980-05-10', 'USA'),
-    (2, 'Emily', 'Johnson', '1975-08-15', 'UK'),
-    (3, 'Michael', 'Williams', '1982-03-22', 'Canada');
+    (1, 'John', 'Smith', '1980-05-10', 'USA', 'Director'),
+    (2, 'Emily', 'Johnson', '1975-08-15', 'UK', 'Director'),
+    (3, 'Michael', 'Williams', '1982-03-22', 'Canada', 'Director');
 
--- Vlozeni dat do tabulky Actors
-INSERT INTO Actors 
-  (ActorID, FirstName, LastName, DateOfBirth, CountryOfOrigin)
+-- Vlozeni Actors do tabulky CastAndCrew
+INSERT INTO CastAndCrew 
+  (PersonID, FirstName, LastName, DateOfBirth, CountryOfOrigin, PersonType)
   VALUES
-    (1, 'Tom', 'Hanks', '1956-07-09', 'USA'),
-    (2, 'Brad', 'Pitt', '1963-12-18', 'USA'),
-    (3, 'Jennifer', 'Lawrence', '1990-08-15', 'USA'),
-    (4, 'Emma', 'Stone', '1988-11-06', 'USA'),
-    (5, 'Leonardo', 'DiCaprio', '1974-11-11', 'USA');
+    (1, 'Tom', 'Hanks', '1956-07-09', 'USA', 'Actor'),
+    (2, 'Brad', 'Pitt', '1963-12-18', 'USA', 'Actor'),
+    (3, 'Jennifer', 'Lawrence', '1990-08-15', 'USA', 'Actor'),
+    (4, 'Emma', 'Stone', '1988-11-06', 'USA', 'Actor'),
+    (5, 'Leonardo', 'DiCaprio', '1974-11-11', 'USA', 'Actor');
 
 -- Vlozeni dat do tabulky Genres
 INSERT INTO Genres 
