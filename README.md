@@ -3,7 +3,7 @@ Database applications development (2022/23)
 
 # Připomínky
 
-- [x] Nestálo by za to, aby některé cizí klíče měly nějakou non-default ON DELETE klauzuli?
+- [x] *Nestálo by za to, aby některé cizí klíče měly nějakou non-default ON DELETE klauzuli?*
     - **> OPRAVENO. Máte pravdu, stálo.**
 - [x] *Opravdu chcete dovolit, aby jeden uživatel hodnotil jeden film vícekrát? Možná to samé u Reviews.*
   - *Aha, podle procedur AddMovieRating/AddMovieReview vidím, že ne. Bezpečnější by bylo mít index nad dvojicí cizích klíčů unikátní (ještě lépe UNIQUE omezení)*
