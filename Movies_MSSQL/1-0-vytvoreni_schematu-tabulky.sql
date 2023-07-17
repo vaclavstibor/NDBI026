@@ -93,20 +93,6 @@ CREATE TABLE Users (
   Password nvarchar(60)
 );
 
-CREATE TABLE Movies (
-  MovieID int PRIMARY KEY,
-  Title nvarchar(255) NOT NULL UNIQUE,
-  ReleaseYear int,
-  DirectorID int,
-  AverageRating DECIMAL(4,2),
-  MainActors nvarchar(255),
-  GenreID int,
-  Duration int
-    check (Duration > 0),
-  FOREIGN KEY (DirectorID) REFERENCES CastAndCrew (PersonID)
-  FOREIGN KEY (GenreID) REFERENCES Genres (GenreID)
-);
-
 CREATE TABLE CastAndCrew (
   PersonID INT IDENTITY(1,1) PRIMARY KEY,
   FirstName nvarchar(60) NOT NULL,
@@ -120,6 +106,20 @@ CREATE TABLE CastAndCrew (
 CREATE TABLE Genres (
   GenreID int PRIMARY KEY,
   Name varchar(30) NOT NULL
+);
+
+CREATE TABLE Movies (
+  MovieID int PRIMARY KEY,
+  Title nvarchar(255) NOT NULL UNIQUE,
+  ReleaseYear int,
+  DirectorID int,
+  AverageRating DECIMAL(4,2),
+  MainActors nvarchar(255),
+  GenreID int,
+  Duration int
+    check (Duration > 0),
+  FOREIGN KEY (DirectorID) REFERENCES CastAndCrew (PersonID),
+  FOREIGN KEY (GenreID) REFERENCES Genres (GenreID)
 );
 
 CREATE TABLE Ratings (
