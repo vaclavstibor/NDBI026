@@ -1,33 +1,32 @@
 -- Filmova databaze
 
 -- Vlozeni dat do tabulky Movies
-
 INSERT INTO Movies 
-  (MovieID, Title, ReleaseYear, DirectorID, AverageRating, MainActors, GenreID, Duration)
+  (MovieID, Title, ReleaseYear, AverageRating, MainActors, GenreID, Duration)
   VALUES
-    (1, 'The Shawshank Redemption', 1994, 1, 9.3, 'Tim Robbins, Morgan Freeman', 1, 142),
-    (2, 'Inception', 2010, 2, 8.8, 'Leonardo DiCaprio, Joseph Gordon-Levitt', 2, 148),
-    (3, 'Pulp Fiction', 1994, 3, 8.9, 'John Travolta, Uma Thurman', 3, 154),
-    (4, 'The Dark Knight', 2008, 1, 9.0, 'Christian Bale, Heath Ledger', 2, 152),
-    (5, 'Fight Club', 1999, 4, 8.8, 'Brad Pitt, Edward Norton', 4, 139);
+    (1, 'The Shawshank Redemption', 1994, 9.3, 'Tim Robbins, Morgan Freeman', 1, 142),
+    (2, 'Inception', 2010, 8.8, 'Leonardo DiCaprio, Joseph Gordon-Levitt', 2, 148),
+    (3, 'Pulp Fiction', 1994, 8.9, 'John Travolta, Uma Thurman', 3, 154),
+    (4, 'The Dark Knight', 2008, 9.0, 'Christian Bale, Heath Ledger', 2, 152),
+    (5, 'Fight Club', 1999, 8.8, 'Brad Pitt, Edward Norton', 4, 139);
 
 -- Vlozeni Directors do tabulky CastAndCrew
 INSERT INTO CastAndCrew 
-  (PersonID, FirstName, LastName, DateOfBirth, CountryOfOrigin, PersonType)
+  (FirstName, LastName, DateOfBirth, CountryOfOrigin, PersonType)
   VALUES
-    (1, 'John', 'Smith', '1980-05-10', 'USA', 'Director'),
-    (2, 'Emily', 'Johnson', '1975-08-15', 'UK', 'Director'),
-    (3, 'Michael', 'Williams', '1982-03-22', 'Canada', 'Director');
+    ('John', 'Smith', '1980-05-10', 'USA', 'Director'),
+    ('Emily', 'Johnson', '1975-08-15', 'UK', 'Director'),
+    ('Michael', 'Williams', '1982-03-22', 'Canada', 'Director');
 
 -- Vlozeni Actors do tabulky CastAndCrew
 INSERT INTO CastAndCrew 
-  (PersonID, FirstName, LastName, DateOfBirth, CountryOfOrigin, PersonType)
+  (FirstName, LastName, DateOfBirth, CountryOfOrigin, PersonType)
   VALUES
-    (1, 'Tom', 'Hanks', '1956-07-09', 'USA', 'Actor'),
-    (2, 'Brad', 'Pitt', '1963-12-18', 'USA', 'Actor'),
-    (3, 'Jennifer', 'Lawrence', '1990-08-15', 'USA', 'Actor'),
-    (4, 'Emma', 'Stone', '1988-11-06', 'USA', 'Actor'),
-    (5, 'Leonardo', 'DiCaprio', '1974-11-11', 'USA', 'Actor');
+    ('Tom', 'Hanks', '1956-07-09', 'USA', 'Actor'),
+    ('Brad', 'Pitt', '1963-12-18', 'USA', 'Actor'),
+    ('Jennifer', 'Lawrence', '1990-08-15', 'USA', 'Actor'),
+    ('Emma', 'Stone', '1988-11-06', 'USA', 'Actor'),
+    ('Leonardo', 'DiCaprio', '1974-11-11', 'USA', 'Actor');
 
 -- Vlozeni dat do tabulky Genres
 INSERT INTO Genres 

@@ -87,7 +87,8 @@ BEGIN
 END;
 -- Volání procedury:
     -- EXEC AddMovieReview @MovieID = 1, @UserID = 1, @ReviewText = 'The best movie I have ever seen.', @ReviewDate = '2023-06-21';
-GO;
+
+
 
 -- Procedura pro získání všech recenzí k danému filmu
 CREATE PROCEDURE GetMovieReviews
@@ -110,7 +111,8 @@ BEGIN
 END;
 -- Volání procedury:
     -- EXEC GetMovieReviews @MovieID = 1;
-GO;
+
+
 
 -- Procedura pro vyhledání filmů v daném roce vydání
 CREATE PROCEDURE SearchMoviesByReleaseYear
@@ -128,7 +130,8 @@ BEGIN
 END;
 -- Volání procedury:
     -- EXEC SearchMoviesByReleaseYear @ReleaseYear = 2022;
-GO;
+
+
 
 -- Procedura pro ziskani nejlepsich filmu daneho zanru 
 CREATE PROCEDURE GetTopMoviesByGenre
@@ -148,7 +151,8 @@ BEGIN
 END;
 -- Volani procedury:
     -- EXEC GetTopMoviesByGenre @GenreID = 1;
-GO;
+
+
 
 -- Procedura pro vyhledavani filmu s danym hercem
 CREATE PROCEDURE SearchMoviesByActor
@@ -167,7 +171,8 @@ BEGIN
 END;
 -- Volani procedury:
     -- EXEC SearchMoviesByActor @ActorFirstName = 'Tom', @ActorLastName = 'Hanks';
-GO;
+
+
 
 -- Procedrua pro zobrazeni oblibenych filmu daneho uzivatele - Vyhledani podle ID nebo jména uživatele
 CREATE PROCEDURE GetUserFavoriteMovies
@@ -209,7 +214,8 @@ BEGIN
 END;
 -- Volani procedury:
     -- EXEC GetUserFavoriteMovies @SearchTerm = 'John Doe';
-GO;
+
+
 
 -- Procedura pro přidání filmu do oblíbených filmů uživatele, každý oblíbený film uživatele je zaznamenaný pouze jednou
 CREATE PROCEDURE AddFavoriteMovie
@@ -234,7 +240,8 @@ BEGIN
 END;
 -- Volání procedury:
     -- EXEC AddFavoriteMovie @UserID = 1, @MovieID = 1;
-GO;
+
+
 
 -- Procedura pro odstranění filmu z oblíbených filmů uživatele, pokud film není v oblíbených, informujeme o tom uživatele
 CREATE PROCEDURE RemoveFavoriteMovie
@@ -261,4 +268,3 @@ BEGIN
 END;
 -- Volání procedury:
     -- EXEC RemoveFavoriteMovie @UserID = 1, @MovieID = 1;
-GO;

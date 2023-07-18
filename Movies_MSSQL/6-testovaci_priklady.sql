@@ -7,11 +7,11 @@
 
 -- Chyba - Přidává uživatele s neplatným emailem (Tento dotaz selže, protože email 'johndoeexample.com' neodpovídá omezení CHECK pro platný email.)
 INSERT INTO Users (UserID, FirstName, LastName, Email, Password)
-VALUES (1, 'John', 'Doe', 'johndoeexample.com', 'password123');
+VALUES (10, 'John', 'Doe', 'johndoeexample.com', 'password123');
 
 -- Chyba - Přidává film s příliš dlouhým titulem (Tento dotaz selže, protože délka titulu překračuje maximální povolenou délku 255 znaků.)
 INSERT INTO Movies (MovieID, Title, ReleaseYear, DirectorID, AverageRating, MainActors, GenreID, Duration)
-VALUES (1, 'This is a very long movie title that exceeds the maximum allowed length', 2022, 1, 8.5, 'Actor 1, Actor 2', 1, 120);
+VALUES (10, 'This is a very long movie title that exceeds the maximum allowed length', 2022, 1, 8.5, 'Actor 1, Actor 2', 1, 120);
 
 -- Chyba - Přidává hodnocení s neplatnou hodnotou (Tento dotaz selže, protože hodnota hodnocení 6.0 překračuje maximální povolenou hodnotu 5.0.)
 INSERT INTO Ratings (RatingID, MovieID, UserID, Rating)

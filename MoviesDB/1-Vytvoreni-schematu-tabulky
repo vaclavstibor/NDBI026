@@ -95,7 +95,6 @@ CREATE TABLE Users (
 
 CREATE TABLE CastAndCrew (
   PersonID INT IDENTITY(1,1) PRIMARY KEY,
-  --PersonID UNIQUEIDENTIFIER DEFAULT NEWID() PRIMARY KEY,
   FirstName nvarchar(60) NOT NULL,
   LastName nvarchar(60) NOT NULL,
   DateOfBirth DATE,
